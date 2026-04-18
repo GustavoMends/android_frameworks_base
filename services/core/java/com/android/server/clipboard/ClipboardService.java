@@ -1427,7 +1427,7 @@ public class ClipboardService extends SystemService {
                 throw new IllegalArgumentException("Unknown clipboard appop " + op);
         }
         if (!allowed) {
-            Slog.e(TAG, "Denying clipboard access to " + callingPackage
+            Slog.d(TAG, "Denying clipboard access to " + callingPackage
                     + ", application is not in focus nor is it a system service for "
                     + "user " + userId);
             return false;
