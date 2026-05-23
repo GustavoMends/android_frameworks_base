@@ -19,13 +19,10 @@
 package com.android.internal.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.android.internal.R;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -39,8 +36,6 @@ public class PropImitationHooks {
 
     private static final String PACKAGE_AIWALLPAPERS = "com.google.android.apps.aiwallpapers";
     private static final String PACKAGE_GPHOTOS = "com.google.android.apps.photos";
-
-    private static final String PACKAGE_NETFLIX = "com.netflix.mediaclient";
 
     private static final String FEATURE_NEXUS_PRELOAD =
             "com.google.android.apps.photos.NEXUS_PRELOAD";
@@ -93,8 +88,6 @@ public class PropImitationHooks {
                     "PIXEL_2025_EXPERIENCE",
                     "PIXEL_2025_MIDYEAR_EXPERIENCE");
 
-    private static volatile String sNetflixModel;
-
     private static volatile boolean sIsPhotos;
 
     public static void setProps(Context context) {
@@ -105,27 +98,15 @@ public class PropImitationHooks {
             return;
         }
 
-        final Resources res = context.getResources();
-        if (res == null) {
-            Log.e(TAG, "Null resources");
-            return;
-        }
-
-        sNetflixModel = res.getString(R.string.config_netflixSpoofModel);
-
         sIsPhotos = packageName.equals(PACKAGE_GPHOTOS);
 
-        /* Set custom model for Netflix
-         * Set Pixel XL for Google Photos
+        /* Set Pixel XL for Google Photos
          * Set  Pixel 10 Pro XL for AI Wallpapers
          */
 
         if (sIsPhotos) {
             dlog("Spoofing Pixel 1 for Google Photos");
             sPixelOneProps.forEach((PropImitationHooks::setPropValue));
-        } else if (!sNetflixModel.isEmpty() && packageName.equals(PACKAGE_NETFLIX)) {
-            dlog("Setting model to " + sNetflixModel + " for Netflix");
-            setPropValue("MODEL", sNetflixModel);
         } else if (packageName.equals(PACKAGE_AIWALLPAPERS)) {
             dlog("Spoofing Pixel 10 Pro XL for AI Wallpapers");
             sPixelTenProps.forEach(PropImitationHooks::setPropValue);

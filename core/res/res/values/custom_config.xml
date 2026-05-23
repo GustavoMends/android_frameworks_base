@@ -99,9 +99,6 @@
     <!-- Should we filter any display modes which are unmapped? -->
     <bool name="config_filterDisplayModes">false</bool>
 
-    <!-- Device model (Build.MODEL) to spoof for netflix, if not empty -->
-    <string name="config_netflixSpoofModel" translatable="false"></string>
-
     <!-- Define device configs on boot -->
     <string-array name="global_device_configs_override" translatable="false">
     </string-array>
