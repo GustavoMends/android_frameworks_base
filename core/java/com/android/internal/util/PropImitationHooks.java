@@ -24,9 +24,8 @@ import android.app.TaskStackListener;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Binder;
-import android.os.Environment;
+import android.os.Build;
 import android.os.Process;
 import android.os.SystemProperties;
 import android.provider.Settings;
@@ -52,19 +51,19 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @hide
- */
+/** @hide */
 public class PropImitationHooks {
 
     private static final String TAG = "PropImitationHooks";
     private static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
 
-    private static final Boolean sDisableGmsProps = SystemProperties.getBoolean(
-            "persist.sys.pihooks.disable.gms_props", false);
+    private static final Boolean sDisableGmsProps =
+            SystemProperties.getBoolean("persist.sys.pihooks.disable.gms_props", false);
 
-    private static final Boolean sDisableKeyAttestationBlock = SystemProperties.getBoolean(
-            "persist.sys.pihooks.disable.gms_key_attestation_block", false);
+    private static final Boolean sDisableKeyAttestationBlock =
+            SystemProperties.getBoolean(
+                    "persist.sys.pihooks.disable.gms_key_attestation_block", false);
+
     private static final String DATA_FILE = "gms_certified_props.json";
 
     private static final String PACKAGE_ARCORE = "com.google.ar.core";
@@ -74,46 +73,48 @@ public class PropImitationHooks {
     private static final String PACKAGE_NETFLIX = "com.netflix.mediaclient";
     private static final String PACKAGE_GPHOTOS = "com.google.android.apps.photos";
 
-    private static final ComponentName GMS_ADD_ACCOUNT_ACTIVITY = ComponentName.unflattenFromString(
-            "com.google.android.gms/.auth.uiflows.minutemaid.MinuteMaidActivity");
+    private static final ComponentName GMS_ADD_ACCOUNT_ACTIVITY =
+            ComponentName.unflattenFromString(
+                    "com.google.android.gms/.auth.uiflows.minutemaid.MinuteMaidActivity");
 
     private static final String FEATURE_NEXUS_PRELOAD =
             "com.google.android.apps.photos.NEXUS_PRELOAD";
 
-    private static final Map<String, String> sPixelOneProps = Map.of(
-        "PRODUCT", "sailfish",
-        "DEVICE", "sailfish",
-        "MANUFACTURER", "Google",
-        "BRAND", "google",
-        "MODEL", "Pixel",
-        "FINGERPRINT", "google/sailfish/sailfish:10/QP1A.191005.007.A3/5972272:user/release-keys"
-    );
+    private static final Map<String, String> sPixelOneProps =
+            Map.of(
+                    "PRODUCT", "sailfish",
+                    "DEVICE", "sailfish",
+                    "MANUFACTURER", "Google",
+                    "BRAND", "google",
+                    "MODEL", "Pixel",
+                    "FINGERPRINT",
+                            "google/sailfish/sailfish:10/QP1A.191005.007.A3/5972272:user/release-keys");
 
-    private static final Set<String> sPixelFeatures = Set.of(
-        "PIXEL_2017_EXPERIENCE",
-        "PIXEL_2017_PRELOAD",
-        "PIXEL_2018_EXPERIENCE",
-        "PIXEL_2018_PRELOAD",
-        "PIXEL_2019_EXPERIENCE",
-        "PIXEL_2019_MIDYEAR_EXPERIENCE",
-        "PIXEL_2019_MIDYEAR_PRELOAD",
-        "PIXEL_2019_PRELOAD",
-        "PIXEL_2020_EXPERIENCE",
-        "PIXEL_2020_MIDYEAR_EXPERIENCE",
-        "PIXEL_2021_MIDYEAR_EXPERIENCE"
-    );
+    private static final Set<String> sPixelFeatures =
+            Set.of(
+                    "PIXEL_2017_EXPERIENCE",
+                    "PIXEL_2017_PRELOAD",
+                    "PIXEL_2018_EXPERIENCE",
+                    "PIXEL_2018_PRELOAD",
+                    "PIXEL_2019_EXPERIENCE",
+                    "PIXEL_2019_MIDYEAR_EXPERIENCE",
+                    "PIXEL_2019_MIDYEAR_PRELOAD",
+                    "PIXEL_2019_PRELOAD",
+                    "PIXEL_2020_EXPERIENCE",
+                    "PIXEL_2020_MIDYEAR_EXPERIENCE",
+                    "PIXEL_2021_MIDYEAR_EXPERIENCE");
 
-    private static final Set<String> sTensorFeatures = Set.of(
-        "PIXEL_2021_EXPERIENCE",
-        "PIXEL_2022_EXPERIENCE",
-        "PIXEL_2022_MIDYEAR_EXPERIENCE",
-        "PIXEL_2023_EXPERIENCE",
-        "PIXEL_2023_MIDYEAR_EXPERIENCE",
-        "PIXEL_2024_EXPERIENCE",
-        "PIXEL_2024_MIDYEAR_EXPERIENCE",
-        "PIXEL_2025_EXPERIENCE",
-        "PIXEL_2025_MIDYEAR_EXPERIENCE"
-    );
+    private static final Set<String> sTensorFeatures =
+            Set.of(
+                    "PIXEL_2021_EXPERIENCE",
+                    "PIXEL_2022_EXPERIENCE",
+                    "PIXEL_2022_MIDYEAR_EXPERIENCE",
+                    "PIXEL_2023_EXPERIENCE",
+                    "PIXEL_2023_MIDYEAR_EXPERIENCE",
+                    "PIXEL_2024_EXPERIENCE",
+                    "PIXEL_2024_MIDYEAR_EXPERIENCE",
+                    "PIXEL_2025_EXPERIENCE",
+                    "PIXEL_2025_MIDYEAR_EXPERIENCE");
 
     private static volatile List<String> sCertifiedProps = new ArrayList<>();
     private static volatile String sStockFp, sNetflixModel;
@@ -197,14 +198,20 @@ public class PropImitationHooks {
             return;
         }
 
-        String savedProps = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.PIF_DATA);
+        String savedProps =
+                Settings.Secure.getString(context.getContentResolver(), Settings.Secure.PIF_DATA);
         if (savedProps == null || TextUtils.isEmpty(savedProps)) {
-            savedProps = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.FETCHED_PIF);
+            savedProps =
+                    Settings.Secure.getString(
+                            context.getContentResolver(), Settings.Secure.FETCHED_PIF);
         }
 
         if (savedProps == null || TextUtils.isEmpty(savedProps)) {
             dlog("Parsing props locally - fetched pif / user provided pif unavailable");
-            sCertifiedProps = Arrays.asList(context.getResources().getStringArray(R.array.config_certifiedBuildProperties));
+            sCertifiedProps =
+                    Arrays.asList(
+                            context.getResources()
+                                    .getStringArray(R.array.config_certifiedBuildProperties));
         } else {
             dlog("Parsing props fetched / provided by user");
             try {
@@ -218,7 +225,10 @@ public class PropImitationHooks {
             } catch (JSONException e) {
                 Log.e(TAG, "Error parsing JSON data", e);
                 dlog("Parsing props locally as fallback");
-                sCertifiedProps = Arrays.asList(context.getResources().getStringArray(R.array.config_certifiedBuildProperties));
+                sCertifiedProps =
+                        Arrays.asList(
+                                context.getResources()
+                                        .getStringArray(R.array.config_certifiedBuildProperties));
             }
         }
 
@@ -228,17 +238,23 @@ public class PropImitationHooks {
         }
 
         final boolean was = isGmsAddAccountActivityOnTop();
-        final TaskStackListener taskStackListener = new TaskStackListener() {
-            @Override
-            public void onTaskStackChanged() {
-                final boolean is = isGmsAddAccountActivityOnTop();
-                if (is ^ was) {
-                    dlog("GmsAddAccountActivityOnTop is:" + is + " was:" + was +
-                            ", killing myself!"); // process will restart automatically later
-                    Process.killProcess(Process.myPid());
-                }
-            }
-        };
+        final TaskStackListener taskStackListener =
+                new TaskStackListener() {
+                    @Override
+                    public void onTaskStackChanged() {
+                        final boolean is = isGmsAddAccountActivityOnTop();
+                        if (is ^ was) {
+                            dlog(
+                                    "GmsAddAccountActivityOnTop is:"
+                                            + is
+                                            + " was:"
+                                            + was
+                                            + ", killing myself!"); // process will restart
+                                                                    // automatically later
+                            Process.killProcess(Process.myPid());
+                        }
+                    }
+                };
 
         if (!was) {
             dlog("Spoofing build for GMS / Finsky");
@@ -287,7 +303,8 @@ public class PropImitationHooks {
         try {
             final ActivityTaskManager.RootTaskInfo focusedTask =
                     ActivityTaskManager.getService().getFocusedRootTaskInfo();
-            return focusedTask != null && focusedTask.topActivity != null
+            return focusedTask != null
+                    && focusedTask.topActivity != null
                     && focusedTask.topActivity.equals(GMS_ADD_ACCOUNT_ACTIVITY);
         } catch (Exception e) {
             Log.e(TAG, "Unable to get top activity!", e);
@@ -340,8 +357,9 @@ public class PropImitationHooks {
 
     public static boolean hasSystemFeature(String name, boolean has) {
         if (sIsPhotos) {
-            if (has && (sPixelFeatures.stream().anyMatch(name::contains)
-                    || sTensorFeatures.stream().anyMatch(name::contains))) {
+            if (has
+                    && (sPixelFeatures.stream().anyMatch(name::contains)
+                            || sTensorFeatures.stream().anyMatch(name::contains))) {
                 dlog("Blocked system feature " + name + " for Google Photos");
                 has = false;
             } else if (!has && name.equalsIgnoreCase(FEATURE_NEXUS_PRELOAD)) {
