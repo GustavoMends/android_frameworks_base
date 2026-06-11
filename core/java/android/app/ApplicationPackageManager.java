@@ -2704,7 +2704,8 @@ public class ApplicationPackageManager extends PackageManager {
     public String getInstallerPackageName(String packageName) {
         try {
             String installer = mPM.getInstallerPackageName(packageName);
-            if ("com.aurora.store".equals(installer)) {
+            if ("com.aurora.store".equals(installer)
+                    || "app.pwhs.universalinstaller".equals(installer)) {
                 return "com.android.vending";
             }
             return installer;
