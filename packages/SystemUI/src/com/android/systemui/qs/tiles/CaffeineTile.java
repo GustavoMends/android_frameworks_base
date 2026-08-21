@@ -55,6 +55,14 @@ public class CaffeineTile extends QSTileImpl<BooleanState> {
 
     @Nullable
     private Icon mIcon = null;
+    @Nullable
+    private Icon mIcon5m = null;
+    @Nullable
+    private Icon mIcon10m = null;
+    @Nullable
+    private Icon mIcon30m = null;
+    @Nullable
+    private Icon mIconInf = null;
 
     private final PowerManager.WakeLock mWakeLock;
     private int mSecondsRemaining;
@@ -65,6 +73,9 @@ public class CaffeineTile extends QSTileImpl<BooleanState> {
         30 * 60,  // 30 min
         -1,       // infinity
     };
+    private static final int FIVE_MIN_INDEX = 0;
+    private static final int TEN_MIN_INDEX = 1;
+    private static final int THIRTY_MIN_INDEX = 2;
     private static final int INFINITE_DURATION_INDEX = DURATIONS.length - 1;
     private CountDownTimer mCountdownTimer = null;
     public long mLastClickTime = -1;
@@ -230,6 +241,34 @@ public class CaffeineTile extends QSTileImpl<BooleanState> {
         state.label = mContext.getString(R.string.quick_settings_caffeine_label);
         state.hasLongClickEffect = false;
         if (state.value) {
+            switch (mDuration) {
+                case FIVE_MIN_INDEX:
+                    if (mIcon5m == null) {
+                        mIcon5m = maybeLoadResourceIcon(R.drawable.ic_qs_caffeine_on_5m);
+                    }
+                    state.icon = mIcon5m;
+                    break;
+                case TEN_MIN_INDEX:
+                    if (mIcon10m == null) {
+                        mIcon10m = maybeLoadResourceIcon(R.drawable.ic_qs_caffeine_on_10m);
+                    }
+                    state.icon = mIcon10m;
+                    break;
+                case THIRTY_MIN_INDEX:
+                    if (mIcon30m == null) {
+                        mIcon30m = maybeLoadResourceIcon(R.drawable.ic_qs_caffeine_on_30m);
+                    }
+                    state.icon = mIcon30m;
+                    break;
+                case INFINITE_DURATION_INDEX:
+                    if (mIconInf == null) {
+                        mIconInf = maybeLoadResourceIcon(R.drawable.ic_qs_caffeine_on_inf);
+                    }
+                    state.icon = mIconInf;
+                    break;
+                default:
+                    break;
+            }
             state.secondaryLabel = formatValueWithRemainingTime();
             state.contentDescription =  mContext.getString(
                     R.string.accessibility_quick_settings_caffeine_on);
