@@ -38,6 +38,10 @@
     <string name="quick_settings_caffeine_label">Caffeine</string>
     <string name="accessibility_quick_settings_caffeine_off">Caffeine off.</string>
     <string name="accessibility_quick_settings_caffeine_on">Caffeine on.</string>
+    <string name="accessibility_quick_settings_caffeine_10_minute_timer">10 minute timer</string>
+    <string name="accessibility_quick_settings_caffeine_30_minute_timer">30 minute timer</string>
+    <string name="accessibility_quick_settings_caffeine_5_minute_timer">5 minute timer</string>
+    <string name="accessibility_quick_settings_caffeine_no_time_limit">No time limit</string>
 
     <!-- Heads up QS tile -->
     <string name="quick_settings_heads_up_label">Heads up</string>

@@ -241,30 +241,39 @@ public class CaffeineTile extends QSTileImpl<BooleanState> {
         state.label = mContext.getString(R.string.quick_settings_caffeine_label);
         state.hasLongClickEffect = false;
         if (state.value) {
+            state.stateDescription = null;
             switch (mDuration) {
                 case FIVE_MIN_INDEX:
                     if (mIcon5m == null) {
                         mIcon5m = maybeLoadResourceIcon(R.drawable.ic_qs_caffeine_on_5m);
                     }
                     state.icon = mIcon5m;
+                    state.stateDescription = mContext.getString(
+                            R.string.accessibility_quick_settings_caffeine_5_minute_timer);
                     break;
                 case TEN_MIN_INDEX:
                     if (mIcon10m == null) {
                         mIcon10m = maybeLoadResourceIcon(R.drawable.ic_qs_caffeine_on_10m);
                     }
                     state.icon = mIcon10m;
+                    state.stateDescription = mContext.getString(
+                            R.string.accessibility_quick_settings_caffeine_10_minute_timer);
                     break;
                 case THIRTY_MIN_INDEX:
                     if (mIcon30m == null) {
                         mIcon30m = maybeLoadResourceIcon(R.drawable.ic_qs_caffeine_on_30m);
                     }
                     state.icon = mIcon30m;
+                    state.stateDescription = mContext.getString(
+                            R.string.accessibility_quick_settings_caffeine_30_minute_timer);
                     break;
                 case INFINITE_DURATION_INDEX:
                     if (mIconInf == null) {
                         mIconInf = maybeLoadResourceIcon(R.drawable.ic_qs_caffeine_on_inf);
                     }
                     state.icon = mIconInf;
+                    state.stateDescription = mContext.getString(
+                            R.string.accessibility_quick_settings_caffeine_no_time_limit);
                     break;
                 default:
                     break;
@@ -275,6 +284,7 @@ public class CaffeineTile extends QSTileImpl<BooleanState> {
             state.state = Tile.STATE_ACTIVE;
         } else {
             state.secondaryLabel = null;
+            state.stateDescription = null;
             state.contentDescription =  mContext.getString(
                     R.string.accessibility_quick_settings_caffeine_off);
             state.state = Tile.STATE_INACTIVE;
