@@ -75,8 +75,7 @@ constructor(
                 AppOpsManager.OP_RECEIVE_EXPLICIT_USER_INTERACTION_AUDIO,
                 AppOpsManager.OP_RECEIVE_SANDBOX_TRIGGER_AUDIO,
             )
-        val OPS_LOCATION =
-            intArrayOf(AppOpsManager.OP_FINE_LOCATION, AppOpsManager.OP_COARSE_LOCATION)
+        val OPS_LOCATION = intArrayOf(AppOpsManager.OP_FINE_LOCATION)
         val OPS = OPS_MIC_CAMERA + OPS_LOCATION
         val USER_INDEPENDENT_OPS =
             intArrayOf(AppOpsManager.OP_PHONE_CALL_CAMERA, AppOpsManager.OP_PHONE_CALL_MICROPHONE)
@@ -274,7 +273,7 @@ constructor(
                     .filter {
                         currentUserProfiles.any { user -> user.id == UserHandle.getUserId(it.uid) }
                     }
-                    .filter { item -> item.code in OPS_LOCATION }
+                    .filter { item -> item.code == AppOpsManager.OP_FINE_LOCATION }
                     .distinct()
             val locationOpBySystem = locationOp.any { item -> isSystemApp(item) }
             val locationOpByBackground = locationOp.any { item -> isBackgroundApp(item.uid) }
@@ -381,8 +380,7 @@ constructor(
             when (appOpItem.code) {
                 AppOpsManager.OP_PHONE_CALL_CAMERA,
                 AppOpsManager.OP_CAMERA -> PrivacyType.TYPE_CAMERA
-                AppOpsManager.OP_FINE_LOCATION,
-                AppOpsManager.OP_COARSE_LOCATION -> PrivacyType.TYPE_LOCATION
+                AppOpsManager.OP_FINE_LOCATION -> PrivacyType.TYPE_LOCATION
                 AppOpsManager.OP_PHONE_CALL_MICROPHONE,
                 AppOpsManager.OP_RECEIVE_AMBIENT_TRIGGER_AUDIO,
                 AppOpsManager.OP_RECEIVE_EXPLICIT_USER_INTERACTION_AUDIO,
@@ -427,7 +425,7 @@ constructor(
             return true
         }
 
-        if (item.code in OPS_LOCATION) {
+        if (item.code == AppOpsManager.OP_FINE_LOCATION) {
             val isSystem = isSystemApp(item)
             val isBackground = isBackgroundApp(item.uid)
             if (isSystem) {
